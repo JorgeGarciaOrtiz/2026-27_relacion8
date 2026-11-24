@@ -24,6 +24,10 @@ include(RUTABASE . "/aplicacion/plantilla/plantilla.php");
 include(RUTABASE . "/scripts/librerias/validacion.php");
 include(RUTABASE . "/scripts/librerias/imagenes.php");
 include(RUTABASE . "/scripts/librerias/ficheros.php");
+include(RUTABASE . "/aplicacion/clases/RegistroTexto.php");
+
+// Inicio la sesión para poder usar $_SESSION
+session_start();
 
 // Creo una constante para los colores del texto
 const COLORESTEXTO = [
