@@ -1,12 +1,14 @@
 <?php
 
+// Clase que implementa la ACL usando arrays para almacenar los datos.
+// Hereda de ACLBase, así que tiene que definir todas sus funciones abstractas
 class ACLArray extends ACLBase
 {
     /**
      * $_roles contiene los roles definidos en la ACL
      * Cada role sera un array asociativo de 
      * cod => [ "cod"=> ,
-     *            "nombre" =>  ,
+     *            "nombre" => ,
      *            "permisos" => [1=>false, 2=> XX, .........10=> XXX]
      *          ]
      */
@@ -20,7 +22,7 @@ class ACLArray extends ACLBase
      *          "cod" => ,
      *          "nick" =>  ,
      *          "nombre" => ,
-     *          "contrasenia" =>  , usamos una función de cifrado.
+     *          "contrasenia" => , usamos una función de cifrado.
      *          "cod_role" => ,
      *          "borrado" =>        
      * ]
@@ -33,19 +35,23 @@ class ACLArray extends ACLBase
         $this->anadirRole("normales", [1 => true]);
         $this->anadirRole("administradores", [1 => true, 2 => true]);
 
-        // Añado los 3 usuarios
+        // Añado el primer usuario
         $this->anadirUsuario(
             "Es usuario alumno",
             "alumno",
             "alum",
             $this->getCodRole("normales")
         );
+
+        // Añado el segundo usuario
         $this->anadirUsuario(
             "Es usuario profesor",
             "profesor",
             "profe",
             $this->getCodRole("administradores")
         );
+
+        // Añado el tercer usuario
         $this->anadirUsuario(
             "Jorge García",
             "jorge",
@@ -55,7 +61,7 @@ class ACLArray extends ACLBase
     }
 
     /**
-     * Añade un role a nuesta ACL
+     * Añade un role a nuestra ACL
      * 
      * @param string $nombre Nombre del role a añadir 
      * @param array $permisos Permisos que tendrá el role. Array con hasta 10 permisos
@@ -66,7 +72,7 @@ class ACLArray extends ACLBase
         // Pongo el nombre en minuscula
         $nombre = mb_strtolower($nombre);
 
-        // Inicializo un arracon todos los permisos a false
+        // Inicializo un array con todos los permisos a false
         $per = [
             1 => false,
             false,
@@ -110,12 +116,12 @@ class ACLArray extends ACLBase
             "permisos" => $per
         ];
 
+        // Se ha creado el role correctamente
         return true;
     }
 
     /**
-     * Función que localiza un role y devuelve el código de ese role o false si no
-     * lo encuentra
+     * Función que localiza un role y devuelve el código de ese role o false si no lo encuentra
      *
      * @param string $nombre nombre del role
      * @return integer|false Devuelve el código de role para el nombre indicado o false si no encuentra el role
@@ -124,12 +130,18 @@ class ACLArray extends ACLBase
     {
         // Pongo el nombre en minuscula
         $nombre = mb_strtolower($nombre);
+
+        // Recorro todos los roles uno a uno
         foreach ($this->_roles as $clave => $role) {
+
+            // Si el nombre del role coincide con el que busco    
             if ($role["nombre"] == $nombre) {
+                // Devuelvo el código del role
                 return $role["cod"];
             }
         }
 
+        // No se encuentra el role
         return false;
     }
 
@@ -150,6 +162,7 @@ class ACLArray extends ACLBase
         // return false;
 
         // Forma corta
+        // Compruebo si existe un role con ese código como índice
         return isset($this->_roles[$codRole]);
     }
 
@@ -166,6 +179,7 @@ class ACLArray extends ACLBase
             return false;
         }
 
+        // Devuelvo el array de permisos del role
         return ($this->_roles[$codRole]["permisos"]);
     }
 
@@ -200,7 +214,7 @@ class ACLArray extends ACLBase
      */
     function anadirUsuario(string $nombre, string $nick, string $contrasena, int $codRole): bool
     {
-        // Pongo el nick as minuscula
+        // Pongo el nick a minuscula
         $nick = mb_strtolower($nick);
 
         // El nick tiene que ser único, así que compruebo que no exista ya
@@ -235,9 +249,9 @@ class ACLArray extends ACLBase
             "borrado" => false
         ];
 
+        // Si se añade el usuario
         return true;
     }
-
 
     /**
      * Obtiene el código de usuario para un nick dado
@@ -247,16 +261,20 @@ class ACLArray extends ACLBase
      */
     function getCodUsuario(string $nick): int|false
     {
-        // Pongo el nick n minuscula
+        // Pongo el nick en minuscula
         $nick = mb_strtolower($nick);
 
+        // Recorro todos los usuarios uno a uno
         foreach ($this->_usuarios as $clave => $usu) {
-            if ($usu["nick"] == $nick) {  // Se encuentra el usuario
+
+            // Si el nick del usuario coincide con el que busco
+            if ($usu["nick"] == $nick) {
+                // Devuelvo su código (la clave del array)
                 return $clave;
             }
         }
 
-        // No se encuentra
+        // No existe ningún usuario con ese nick
         return false;
     }
 
@@ -288,14 +306,20 @@ class ACLArray extends ACLBase
      */
     function existeUsuario(string $nick): bool
     {
+        // Paso el nick a minúsculas
         $nick = mb_strtolower($nick);
 
+        // Recorro todos los usuarios uno a uno
         foreach ($this->_usuarios as $clave => $usu) {
+
+            // Si el nick del usuario coincide con el que se ha pasado por parametro
             if ($usu["nick"] == $nick) {
+                // Si existe
                 return true;
             }
         }
 
+        // No existe
         return false;
     }
 
@@ -354,8 +378,7 @@ class ACLArray extends ACLBase
      * Función que devuelve los permisos de un usuario
      *
      * @param integer $codUsuario Usuario a buscar
-     * @return array|false Devuelve los permisos del usuario o false si 
-     * no existe el usuario
+     * @return array|false Devuelve los permisos del usuario o false si no existe el usuario
      */
     function getPermisos(int $codUsuario): array|false
     {
@@ -376,10 +399,12 @@ class ACLArray extends ACLBase
      */
     function getNombre(int $codUsuario): string|false
     {
+        // Si el usuario no existe, no se puede devolver el nombre
         if (!$this->existeCodUsuario($codUsuario)) {
             return false;
         }
 
+        // Devuelvo el nombre del usuario
         return $this->_usuarios[$codUsuario]["nombre"];
     }
 
@@ -387,11 +412,21 @@ class ACLArray extends ACLBase
      * Devuelve si un usuario está borrado
      *
      * @param integer $codUsuario Usuario a buscar.
-     * @return boolean true si el usuario existe y no está borrado, false en otro caso
+     * @return boolean true si el usuario está borrado, false en otro caso
      */
     function getBorrado(int $codUsuario): bool
     {
-        return false; // TO-DO
+        // Recorro todos los usuarios uno a uno
+        foreach ($this->_usuarios as $clave => $usu) {
+
+            // Si el codigo es igual al pasado por parametro y 
+            // borrado lo tiene en true devolvemos que si esta borrado (true)
+            if ($usu["cod"] == $codUsuario && $usu["borrado"] == true) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -402,9 +437,11 @@ class ACLArray extends ACLBase
      */
     function getUsuarioRole(int $codUsuario): int|false
     {
+        // Si el usuario no existe, devuelvo false
         if (!$this->existeCodUsuario($codUsuario))
             return false;
 
+        // Devuelvo el código del rol del usuario
         return $this->_usuarios[$codUsuario]["cod_role"];
     }
 
@@ -417,11 +454,14 @@ class ACLArray extends ACLBase
      */
     function setNombre(int $codUsuario, string $nombre): bool
     {
+        // Si el usuario no existe, no se puede asignar el nombre
         if (!$this->existeCodUsuario($codUsuario))
             return false;
 
+        // Cambio el nombre del usuario
         $this->_usuarios[$codUsuario]["nombre"] = $nombre;
 
+        // Indico que se ha podido hacer
         return true;
     }
 
@@ -430,12 +470,23 @@ class ACLArray extends ACLBase
      *
      * @param integer $codUsuario usuario a buscar
      * @param string $contrasenia contraseña a asignar
-     * @return boolean Devuelve true si ha podido asignar la contraseña
-     * False en otro caso
+     * @return boolean Devuelve true si ha podido asignar la contraseña, false en otro caso
      */
     function setContrasenia(int $codUsuario, string $contrasenia): bool
     {
-        return false; // TO-DO
+        // Si el usuario no existe, no se puede asignar la contraseña
+        if (!$this->existeCodUsuario($codUsuario)) {
+            return false;
+        }
+
+        // La contraseña que llega por parámetro la cifro con BCRYPT y guardo el resultado en la misma variable
+        $contrasenia = password_hash($contrasenia, PASSWORD_BCRYPT);
+
+        // Cambio la contraseña del usuario
+        $this->_usuarios[$codUsuario]["contrasenia"] = $contrasenia;
+
+        // Indico que se ha podido hacer
+        return true;
     }
 
     /**
@@ -443,17 +494,19 @@ class ACLArray extends ACLBase
      *
      * @param integer $codUsuario Usuario a buscar
      * @param boolean $borrado Estado a asignar
-     * @return boolean Devuelve true si ha podido asignar el estado. 
-     * False en otro caso
+     * @return boolean Devuelve true si ha podido asignar el estado, false en otro caso
      */
     function setBorrado(int $codUsuario, bool $borrado): bool
     {
-        if (!$this->existeCodUsuario($codUsuario))
+        // Si el usuario no existe, no se puede cambiar su estado
+        if (!$this->existeCodUsuario($codUsuario)) {
             return false;
+        }
 
-
+        // Asigno el estado de borrado al usuario
         $this->_usuarios[$codUsuario]["borrado"] = $borrado;
 
+        // Si se ha podido borra/desborra el usuario
         return true;
     }
 
@@ -462,12 +515,25 @@ class ACLArray extends ACLBase
      *
      * @param integer $codUsuario Usuario a buscar
      * @param integer $role Role a asignar
-     * @return boolean Devuelve true si ha podido asignar el role al usuario.
-     * False si no existe el usuario, role o no ha podido asignarlo
+     * @return boolean true si ha podido asignar el role al usuario, false si el usuario no existe, el role no existe o no se ha podido asignar
      */
     function setUsuarioRole(int $codUsuario, int $role): bool
     {
-        return false; // TO-DO
+        // Si el usuario no existe, no se puede cambiar el rol
+        if (!$this->existeCodUsuario($codUsuario)) {
+            return false;
+        }
+
+        // Si el role no existe, no se puede asignar
+        if (!$this->existeRole($role)) {
+            return false;
+        }
+
+        // Cambio el rol del usuario
+        $this->_usuarios[$codUsuario]["cod_role"] =  $role;
+
+        // Indico que se ha podido hacer
+        return true;
     }
 
     /**
@@ -478,7 +544,14 @@ class ACLArray extends ACLBase
      */
     function dameUsuarios(): array
     {
-        return []; // TO-DO
+        $usuarios = [];
+
+        // Guardo el nick en la posición del código de usuario
+        foreach ($this->_usuarios as $clave => $usu) {
+            $usuarios[$clave] = $usu["nick"];
+        }
+
+        return $usuarios;
     }
 
     /**
@@ -491,8 +564,10 @@ class ACLArray extends ACLBase
     {
         $roles = [];
 
-        foreach ($this->_roles as $clave => $role)
+        // Guardo el nombre del role en la posición de su código
+        foreach ($this->_roles as $clave => $role) {
             $roles[$clave] = $role["nombre"];
+        }
 
         return $roles;
     }
