@@ -341,7 +341,7 @@ class ACLArray extends ACLBase
         // Si existe el usuario con ese código
         if ($this->existeCodUsuario($codUsuario)) {
 
-            // Miro si el role del usuario tiene ese permiso
+            // Saco el código del rol del usuario (getUsuarioRole) y compruebo si ese rol tiene el permiso en true (getPermisoRole)
             if ($this->getPermisoRole($this->getUsuarioRole($codUsuario), $numero)) {
                 return true;
             }
@@ -359,7 +359,13 @@ class ACLArray extends ACLBase
      */
     function getPermisos(int $codUsuario): array|false
     {
-        return false; // TO-DO
+        // Si el usuario no existe, devuelvo false
+        if (!$this->existeCodUsuario($codUsuario)) {
+            return false;
+        }
+
+        // Devuelvo los permisos del rol del usuario
+        return $this->getPermisosRole($this->getUsuarioRole($codUsuario));
     }
 
     /**
@@ -389,10 +395,10 @@ class ACLArray extends ACLBase
     }
 
     /**
-     * Devuelve el role que tiene un usuario concreto
+     * Devuelve el código del rol que tiene un usuario concreto
      *
      * @param integer $codUsuario Usuario a buscar
-     * @return integer|false Devuelve el role del usuario o false si no existe.
+     * @return integer|false Devuelve el código del rol del usuario o false si no existe.
      */
     function getUsuarioRole(int $codUsuario): int|false
     {
