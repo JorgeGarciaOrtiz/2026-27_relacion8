@@ -178,7 +178,15 @@ class ACLArray extends ACLBase
      */
     function getPermisoRole(int $codRole, int $numero): bool
     {
-        return false; // TO-DO
+        // Si el rol existe, el permiso existe, y el permiso del rol es true devolvera true
+        if (
+            $this->existeRole($codRole) &&
+            isset($this->_roles[$codRole]["permisos"][$numero]) &&
+            $this->_roles[$codRole]["permisos"][$numero] == true
+        ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -260,7 +268,16 @@ class ACLArray extends ACLBase
      */
     function existeCodUsuario(int $codUsuario): bool
     {
-        return false; // TO-DO
+        // Forma larga
+        // foreach ($this->_usuarios as $clave => $usu) {
+        //     if ($usu["cod"] == $codUsuario) {
+        //         return true;
+        //     }
+        // }
+        // return false;
+
+        // Forma corta
+        return isset($this->_usuarios[$codUsuario]);
     }
 
     /**
@@ -271,7 +288,15 @@ class ACLArray extends ACLBase
      */
     function existeUsuario(string $nick): bool
     {
-        return false; // TO-DO
+        $nick = mb_strtolower($nick);
+
+        foreach ($this->_usuarios as $clave => $usu) {
+            if ($usu["nick"] == $nick) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -287,8 +312,9 @@ class ACLArray extends ACLBase
         $nick = mb_strtolower($nick);
 
         // Compruebo si existe el nick
-        if (!$this->existeUsuario($nick))
+        if (!$this->existeUsuario($nick)) {
             return false;
+        }
 
         // Recojo cual es el codigo
         $codigo = $this->getCodUsuario($nick);
@@ -312,7 +338,16 @@ class ACLArray extends ACLBase
      */
     function getPermiso(int $codUsuario, int $numero): bool
     {
-        return false; // TO-DO
+        // Si existe el usuario con ese código
+        if ($this->existeCodUsuario($codUsuario)) {
+
+            // Miro si el role del usuario tiene ese permiso
+            if ($this->getPermisoRole($this->getUsuarioRole($codUsuario), $numero)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -335,8 +370,9 @@ class ACLArray extends ACLBase
      */
     function getNombre(int $codUsuario): string|false
     {
-        if (!$this->existeCodUsuario($codUsuario))
+        if (!$this->existeCodUsuario($codUsuario)) {
             return false;
+        }
 
         return $this->_usuarios[$codUsuario]["nombre"];
     }

@@ -70,7 +70,7 @@ function inicioCuerpo(string $cabecera, ?array $ubicacion = null)
                     <li><a href="/aplicacion/practicas">Ejercicios</a></li>
                     <li><a href="/aplicacion/personalizar/index.php">Información</a></li>
                     <li><a href="/aplicacion/personalizar/personalizar.php">Personalizar</a></li>
-                    <li><a href="/aplicacion/texto/verTexto.php">Ver textos</a></li>
+                    <li><a href="/aplicacion/texto/verTextos.php">Ver textos</a></li>
                 </ul>
             </div>
 
