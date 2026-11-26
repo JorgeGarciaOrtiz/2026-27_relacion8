@@ -20,14 +20,19 @@ spl_autoload_register(function ($clase) {
 });
 
 // Incluimos la plantilla y las librerías generales de la aplicación
-include(RUTABASE . "/aplicacion/plantilla/plantilla.php");
-include(RUTABASE . "/scripts/librerias/validacion.php");
-include(RUTABASE . "/scripts/librerias/imagenes.php");
-include(RUTABASE . "/scripts/librerias/ficheros.php");
-include(RUTABASE . "/aplicacion/clases/RegistroTexto.php");
+include_once(RUTABASE . "/aplicacion/plantilla/plantilla.php");
+include_once(RUTABASE . "/scripts/librerias/validacion.php");
+include_once(RUTABASE . "/scripts/librerias/imagenes.php");
+include_once(RUTABASE . "/scripts/librerias/ficheros.php");
+include_once(RUTABASE . "/aplicacion/clases/RegistroTexto.php");
 
 // Inicio la sesión para poder usar $_SESSION
 session_start();
+
+// Creo el objeto ACL: guarda los usuarios, los roles y los permisos
+$acl = new ACLArray();
+// Creo el objeto Acceso: guarda quién está conectado en este momento
+$acceso = new Acceso();
 
 // Creo una constante para los colores del texto
 const COLORESTEXTO = [

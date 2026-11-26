@@ -3,6 +3,12 @@
 // Incluimos la cabecera y la plantilla de la aplicación
 include_once(dirname(__FILE__) . "/../../cabecera.php");
 
+// Si no hay un usuario validado, lo mandamos al login
+if (!$acceso->hayUsuario()) {
+    header("Location: /aplicacion/acceso/login.php");
+    exit;
+}
+
 // Ruta de navegación de la página
 $ubicacion = [
     "Inicio" => "../../../index.php",

@@ -62,15 +62,36 @@ function inicioCuerpo(string $cabecera, ?array $ubicacion = null)
                 <h1 id="titulo" style="display: inline-block; vertical-align: middle;"><?php echo $cabecera; ?></h1>
             </header>
 
-            <div id="barraLogin"></div>
+            <div id="barraLogin">
+                <?php
+                // Si hay un usuario validado, mostramos su nombre y el enlace para cerrar sesión
+                if ($acceso->hayUsuario()) {
+                    echo "Conectado como " . $acceso->getNombre() . " | ";
+                    echo " <a href='/aplicacion/acceso/loggout.php'>Cerrar sesión</a><br><br>";
+                } else {
+                    // Si no hay usuario, mostramos "Sin usuario" y el enlace para iniciar sesión
+                    echo "Sin usuario | ";
+                    echo "<a href='/aplicacion/acceso/login.php'>Iniciar sesión</a><br><br>";
+                }
+                ?>
+            </div>
 
             <div id="barraMenu">
                 <ul>
                     <li><a href="/index.php">Inicio</a></li>
-                    <li><a href="/aplicacion/practicas">Ejercicios</a></li>
-                    <li><a href="/aplicacion/personalizar/index.php">Información</a></li>
-                    <li><a href="/aplicacion/personalizar/personalizar.php">Personalizar</a></li>
-                    <li><a href="/aplicacion/texto/verTextos.php">Ver textos</a></li>
+
+                    <!-- Estos botones solo los ve un usuario validado -->
+                    <?php if ($acceso->hayUsuario()) { ?>
+                        <li><a href="/aplicacion/practicas">Ejercicios</a></li>
+                        <li><a href="/aplicacion/personalizar/index.php">Información</a></li>
+
+                        <!-- El botón Personalizar solo lo ve quien tiene el permiso 1, si pongo el permiso 3 no se verá -->
+                        <?php if ($acceso->puedePermiso(1)) { ?>
+                            <li><a href="/aplicacion/personalizar/personalizar.php">Personalizar</a></li>
+                        <?php } ?>
+
+                        <li><a href="/aplicacion/texto/verTextos.php">Ver textos</a></li>
+                    <?php } ?>
                 </ul>
             </div>
 

@@ -3,6 +3,18 @@
 // Incluyo la cabecera y la plantilla de la aplicación
 include_once(dirname(__FILE__) . "/../../cabecera.php");
 
+// Si no hay un usuario validado, lo mandamos al login
+if (!$acceso->hayUsuario()) {
+    header("Location: /aplicacion/acceso/login.php");
+    exit;
+}
+
+// Si el usuario no tiene el permiso 1, mostramos una página de error
+if (!$acceso->puedePermiso(1)) { // Si pongo el permiso 3, dará error
+    paginaError("Acceso no permitido");
+    exit;
+}
+
 // Variable con el título
 $titulo = "Personalizar";
 
@@ -79,7 +91,7 @@ if (isset($_POST["guardar"])) {
 
     // Si no hay errores, guardo los colores elegidos en las cookies
     if (!$errores) {
-        // setcookie(nombre de la cookie, valor del if, duración);
+        // setcookie(nombre de la cookie, valor, duración);
         setcookie("colorFondo", $colorFondo, time() + 60 * 60 * 24 * 30, "/");
         setcookie("colorTexto", $colorTexto, time() + 60 * 60 * 24 * 30, "/");
     }
@@ -175,7 +187,7 @@ function formulario(
         <p>Color de fondo: </p>
         <select name="colorFondo">
             <?php foreach ($coloresFondo as $clave => $valor) { ?>
-               <option value="<?php echo $clave ?>" <?php if ($datos["colorFondo"] == $clave) { ?> selected <?php } ?>>
+                <option value="<?php echo $clave ?>" <?php if ($datos["colorFondo"] == $clave) { ?> selected <?php } ?>>
                     <?php echo $clave ?>
                 </option>
             <?php } ?>
@@ -191,7 +203,7 @@ function formulario(
             <?php } ?>
         </select>
 
-        <!-- Botón para subir guardar los colores -->
+        <!-- Botón para guardar los colores -->
         <br><br><input type="submit" name="guardar" value="guardar">
 
     </form>

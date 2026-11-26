@@ -1,13 +1,18 @@
 <?php
 
-
 // Incluimos la cabecera y la plantilla de la aplicación
 include_once(dirname(__FILE__) . "/../../cabecera.php");
 
-// Variable con el titulo
+// Si no hay un usuario validado, lo mandamos al login
+if (!$acceso->hayUsuario()) {
+    header("Location: /aplicacion/acceso/login.php");
+    exit;
+}
+
+// Variable con el título
 $titulo = "Información";
 
-// Ruta de navegación de la página (ajusta los enlaces a tu proyecto)
+// Ruta de navegación de la página
 $ubicacion = [
     "Inicio" => "../../index.php",
     "Relación 8" => "../practicas/relacion8/index.php",
@@ -18,8 +23,8 @@ $ubicacion = [
 // CONTROLADOR
 // ==========================================================
 
-// Si no hay cookie el color es blanco, si no sera el valor de la cookie
-// Si el valor de la cookie no esta en COLORESFONDO sera white
+// Si no hay cookie el color es blanco, si no será el valor de la cookie
+// Si el valor de la cookie no está en COLORESFONDO será white
 $colorFondo = COLORESFONDO[$_COOKIE["colorFondo"] ?? "blanco"] ?? "white";
 
 // Si no hay cookie el texto es negro, si no será el valor de la cookie
@@ -72,9 +77,11 @@ function cabecera(string $colorFondo, string $colorTexto)
 
 /**
  * Función que muestra el cuerpo de la página con una información cualquiera.
+ * 
+ * @param int $contador Número de veces que se ha entrado a la página
  */
 function cuerpo(int $contador)
 {
-    echo "<h2>Página de Jorge García Ortiz</h2>";
+    echo "<h2>Página con un contador</h2>";
     echo "Número de veces que he entrado a la página: " . $contador;
 }

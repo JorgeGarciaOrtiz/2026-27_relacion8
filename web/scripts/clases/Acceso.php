@@ -38,7 +38,7 @@ class Acceso
     // ---------------------------------------------------
 
     /**
-     * Funcion privada para guardar la información en la sesión
+     * Función privada para guardar la información en la sesión
      *
      * @return boolean Devuelve true si se ha podido hacer. False en cualquier otro caso
      */
@@ -65,7 +65,7 @@ class Acceso
     }
 
     /**
-     * Función privada que recoje la información de la sesión
+     * Función privada que recoge la información de la sesión
      *
      * @return boolean Devuelve true si se ha podido recoger
      */
@@ -93,9 +93,9 @@ class Acceso
     }
 
     /**
-     * Sirve para registrar un usuario en la aplicación. Almacena
-     * los valores en las propiedades apropiadas y en la sesión 
-     * para guardar en la sesión la información del usuario validado.
+     * Registra un usuario en la aplicación: guarda sus datos en las
+     * propiedades de la clase y también en la sesión, para que
+     * se mantengan en todas las páginas.
      *
      * @param string $nick nick del usuario a registrar
      * @param string $nombre nombre del usuario a registrar
@@ -157,7 +157,7 @@ class Acceso
     /**
      * Función que devuelve si el usuario registrado tiene o no el permiso indicado
      *
-     * @param integer $numero Numero de permiso a comprobar
+     * @param integer $numero Número de permiso a comprobar
      * @return bool Devuelve true si hay usuario registrado y tiene el permiso indicado
      */
     public function puedePermiso(int $numero): bool
@@ -177,7 +177,7 @@ class Acceso
     // ---------------------------------------------------
 
     /**
-     * Devuelve el nick del usuario indicado o false si no hay usuario
+     * Devuelve el nick del usuario registrado o false si no hay usuario
      *
      * @return string|false
      */

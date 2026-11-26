@@ -29,6 +29,8 @@ function cabecera() {}
 
 function cuerpo()
 {
+    // Para comprobar que la sesión está funcionando bien
+    // var_dump($_SESSION);
 ?>
     <a href="./aplicacion/pruebas/index.php">Pruebas</a>
     <br>

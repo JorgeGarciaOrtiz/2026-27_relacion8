@@ -3,7 +3,13 @@
 // Incluimos la cabecera y la plantilla de la aplicación
 include_once(dirname(__FILE__) . "/../../../cabecera.php");
 
-// Variable con el titulo
+// Si no hay un usuario validado, lo mandamos al login
+if (!$acceso->hayUsuario()) {
+    header("Location: /aplicacion/acceso/login.php");
+    exit;
+}
+
+// Variable con el título
 $titulo = "Relación 8";
 
 // Ruta de navegación de la página
@@ -17,6 +23,8 @@ $ubicacion = [
 // CONTROLADOR
 // ==========================================================
 
+$tienePermiso = $acceso->puedePermiso(1);
+
 // ==========================================================
 // PLANTILLA
 // ==========================================================
@@ -28,7 +36,7 @@ finCabecera();
 
 // Cuerpo de la página
 inicioCuerpo($titulo, $ubicacion);
-cuerpo();
+cuerpo($tienePermiso);
 finCuerpo();
 
 // ==========================================================
@@ -37,4 +45,15 @@ finCuerpo();
 
 function cabecera() {}
 
-function cuerpo() {}
+function cuerpo(bool $tienePermiso)
+{
+?>
+    <a href="/aplicacion/personalizar/index.php">Información</a><br>
+
+    <?php if ($tienePermiso) { ?>
+        <a href="/aplicacion/personalizar/personalizar.php">Personalizar</a><br>
+    <?php } ?>
+
+    <a href="/aplicacion/texto/verTextos.php">Ver textos</a>
+<?php
+}

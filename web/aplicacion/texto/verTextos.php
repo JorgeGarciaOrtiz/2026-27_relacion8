@@ -3,6 +3,12 @@
 // Incluyo la cabecera y la plantilla de la aplicación
 include_once(dirname(__FILE__) . "/../../cabecera.php");
 
+// Si no hay un usuario validado, lo mandamos al login
+if (!$acceso->hayUsuario()) {
+    header("Location: /aplicacion/acceso/login.php");
+    exit;
+}
+
 // Variable con el título
 $titulo = "Registro de textos";
 
@@ -17,7 +23,7 @@ $ubicacion = [
 // CONTROLADOR
 // ==========================================================
 
-// Para borrar la sesión si me es neceario
+// Para borrar la sesión si es necesario
 // unset($_SESSION["listaTextos"]);
 
 // Si todavía no existe la lista de textos en la sesión:
@@ -53,9 +59,9 @@ if (isset($_POST["registrar"])) {
         $texto = trim($texto);
     }
 
-    // Si esta vacio dara error
+    // Si está vacío dará error
     if ($texto === "") {
-        $errores["texto"][] = "El texto esta vacio";
+        $errores["texto"][] = "El texto está vacío";
     }
 
     // Guardamos el texto para mostrarlo en el formulario
@@ -67,7 +73,7 @@ if (isset($_POST["registrar"])) {
         // Creo un objeto de un registro
         $registroTexto = new RegistroTexto($texto);
 
-        // Asigno al array de objeto el nuevo registro
+        // Añado el nuevo registro al array $textos
         $textos[] = $registroTexto;
 
         // Actualizo la sesión con la copia de $textos
@@ -112,6 +118,7 @@ function cabecera() {}
  *
  * @param array $errores Errores de validación del formulario
  * @param array $datos Datos que se muestran en el formulario
+ * @param array $textos Textos guardados que se muestran en el textarea
  */
 function cuerpo(
     array $errores,
@@ -127,6 +134,7 @@ function cuerpo(
  *
  * @param array $errores Errores de validación que se muestran encima del formulario
  * @param array $datos Datos que se muestran en el formulario
+ * @param array $textos Textos guardados que se muestran en el textarea
  */
 function formulario(
     array $errores,
@@ -151,12 +159,11 @@ function formulario(
         <input type="text" name="texto" id="texto"
             value="">
 
-
-        <!-- Textarea con todos los puntos -->
+        <!-- Textarea con todos los textos -->
         <h2>Textos</h2>
         <textarea readonly name="listaTextos" rows="6" cols="40"><?php foreach ($textos as $clave => $valor) { ?><?php echo $valor->getCadena() . ", " . $valor->getFechaHora()->format('d/m/Y H:i') . "\n" ?><?php } ?></textarea>
 
-        <!-- Botón para añadir los registros -->
+        <!-- Botón para añadir los textos -->
         <br><br><input type="submit" name="registrar" value="Registrar">
 
         <!-- Botón para limpiar los textos -->

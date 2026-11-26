@@ -6,7 +6,7 @@ class ACLArray extends ACLBase
 {
     /**
      * $_roles contiene los roles definidos en la ACL
-     * Cada role sera un array asociativo de 
+     * Cada role será un array asociativo de 
      * cod => [ "cod"=> ,
      *            "nombre" => ,
      *            "permisos" => [1=>false, 2=> XX, .........10=> XXX]
@@ -16,7 +16,7 @@ class ACLArray extends ACLBase
 
     /**
      * $_usuarios contiene los usuarios definidos en la ACL
-     * Cada usuario sera un array asociativo de
+     * Cada usuario será un array asociativo de
      * 
      * cod => [
      *          "cod" => ,
@@ -69,7 +69,7 @@ class ACLArray extends ACLBase
      */
     function anadirRole(string $nombre, array $permisos = array()): bool
     {
-        // Pongo el nombre en minuscula
+        // Pongo el nombre en minúscula
         $nombre = mb_strtolower($nombre);
 
         // Inicializo un array con todos los permisos a false
@@ -128,7 +128,7 @@ class ACLArray extends ACLBase
      */
     function getCodRole(string $nombre): int|false
     {
-        // Pongo el nombre en minuscula
+        // Pongo el nombre en minúscula
         $nombre = mb_strtolower($nombre);
 
         // Recorro todos los roles uno a uno
@@ -174,7 +174,7 @@ class ACLArray extends ACLBase
      */
     function getPermisosRole(int $codRole): array|false
     {
-        // Compruebo que existe el codigo de role
+        // Compruebo que existe el código de role
         if (!$this->existeRole($codRole)) {
             return false;
         }
@@ -192,7 +192,7 @@ class ACLArray extends ACLBase
      */
     function getPermisoRole(int $codRole, int $numero): bool
     {
-        // Si el rol existe, el permiso existe, y el permiso del rol es true devolvera true
+        // Si el rol existe, el permiso existe, y el permiso del rol es true devolverá true
         if (
             $this->existeRole($codRole) &&
             isset($this->_roles[$codRole]["permisos"][$numero]) &&
@@ -207,14 +207,14 @@ class ACLArray extends ACLBase
      * Función que añade un nuevo usuario a nuestra ACL
      *
      * @param string $nombre Nombre del usuario
-     * @param string $nick Nick unico para el usuario
+     * @param string $nick Nick único para el usuario
      * @param string $contrasena contraseña del usuario
      * @param integer $codRole Role a asignarle
      * @return boolean Devuelve true si puede crearlo. False en caso contrario
      */
     function anadirUsuario(string $nombre, string $nick, string $contrasena, int $codRole): bool
     {
-        // Pongo el nick a minuscula
+        // Pongo el nick a minúscula
         $nick = mb_strtolower($nick);
 
         // El nick tiene que ser único, así que compruebo que no exista ya
@@ -230,7 +230,7 @@ class ACLArray extends ACLBase
         // La contraseña que llega por parámetro la cifro con BCRYPT y guardo el resultado en la misma variable
         $contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
 
-        // Busco cual es el ultimo codigo
+        // Busco cual es el ultimo código
         $cont = 0;
         foreach ($this->_usuarios as $clave => $usu) {
             if ($usu["cod"] > $cont)
@@ -257,11 +257,11 @@ class ACLArray extends ACLBase
      * Obtiene el código de usuario para un nick dado
      *
      * @param string $nick nick del usuario a buscar
-     * @return integer|false Devuelve el codigo del usuario o false si no lo encuentra
+     * @return integer|false Devuelve el código del usuario o false si no lo encuentra
      */
     function getCodUsuario(string $nick): int|false
     {
-        // Pongo el nick en minuscula
+        // Pongo el nick en minúscula
         $nick = mb_strtolower($nick);
 
         // Recorro todos los usuarios uno a uno
@@ -312,7 +312,7 @@ class ACLArray extends ACLBase
         // Recorro todos los usuarios uno a uno
         foreach ($this->_usuarios as $clave => $usu) {
 
-            // Si el nick del usuario coincide con el que se ha pasado por parametro
+            // Si el nick del usuario coincide con el que se ha pasado por parámetro
             if ($usu["nick"] == $nick) {
                 // Si existe
                 return true;
@@ -332,7 +332,7 @@ class ACLArray extends ACLBase
      */
     function esValido(string $nick, string $contrasena): bool
     {
-        // Pongo el nick en minuscula
+        // Pongo el nick en minúscula
         $nick = mb_strtolower($nick);
 
         // Compruebo si existe el nick
@@ -340,7 +340,7 @@ class ACLArray extends ACLBase
             return false;
         }
 
-        // Recojo cual es el codigo
+        // Recojo cual es el código
         $codigo = $this->getCodUsuario($nick);
 
         // Compruebo si la contraseña que me pasan por parametro es la del usuario con ese nick
@@ -419,8 +419,8 @@ class ACLArray extends ACLBase
         // Recorro todos los usuarios uno a uno
         foreach ($this->_usuarios as $clave => $usu) {
 
-            // Si el codigo es igual al pasado por parametro y 
-            // borrado lo tiene en true devolvemos que si esta borrado (true)
+            // Si el código es igual al pasado por parametro y 
+            // borrado lo tiene en true devolvemos que sí esta borrado (true)
             if ($usu["cod"] == $codUsuario && $usu["borrado"] == true) {
                 return true;
             }
@@ -538,7 +538,7 @@ class ACLArray extends ACLBase
 
     /**
      * Devuelve un array con todos los usuarios existentes. 
-     * La clave es el codigo de usuario, el valor es el nick del usuario 
+     * La clave es el código de usuario, el valor es el nick del usuario 
      *
      * @return array Array con todos los usuarios existentes
      */
@@ -556,7 +556,7 @@ class ACLArray extends ACLBase
 
     /**
      * Devuelve un array con todos los roles existentes. 
-     * La clave es el codigo de role, el valor es el nombre del role 
+     * La clave es el código de role, el valor es el nombre del role 
      *
      * @return array Array con todos los roles existentes
      */
