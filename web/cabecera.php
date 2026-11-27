@@ -9,11 +9,16 @@ else
     error_reporting(E_ALL);
 
 spl_autoload_register(function ($clase) {
-    $ruta = RUTABASE . "/scripts/clases/";
+    $ruta = RUTABASE . "/aplicacion/clases/";
     $fichero = $ruta . "$clase.php";
+    $fichero2 = RUTABASE . "/scripts/clases/$clase.php";
 
     if (file_exists($fichero)) {
         require_once($fichero);
+
+    } else if (file_exists($fichero2)) {
+        require_once($fichero2);
+
     } else {
         throw new Exception("La clase $clase no se ha encontrado.");
     }
@@ -22,9 +27,6 @@ spl_autoload_register(function ($clase) {
 // Incluimos la plantilla y las librerías generales de la aplicación
 include_once(RUTABASE . "/aplicacion/plantilla/plantilla.php");
 include_once(RUTABASE . "/scripts/librerias/validacion.php");
-include_once(RUTABASE . "/scripts/librerias/imagenes.php");
-include_once(RUTABASE . "/scripts/librerias/ficheros.php");
-include_once(RUTABASE . "/aplicacion/clases/RegistroTexto.php");
 
 // Inicio la sesión para poder usar $_SESSION
 session_start();

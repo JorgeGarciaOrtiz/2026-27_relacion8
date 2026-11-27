@@ -65,9 +65,16 @@ if (isset($_POST["login"])) {
         // Guardamos al usuario validado en la sesión con el objeto Acceso
         $acceso->registrarUsuario($nick, $acl->getNombre($codUsuario), $acl->getPermisos($codUsuario));
 
-        // Redirigimos a index.php para que no se vuelva a enviar el formulario
-        header("Location: ../../index.php"); // header("Location: /index.php");
+        // Si una página protegida guardó su ruta, vuelvo a ella; si no, voy al index
+        $destino = $_SESSION["volver"] ?? "../../index.php";
+
+        // Borro la ruta guardada para que no se use en el siguiente login
+        unset($_SESSION["volver"]);
+
+        // Redirijo al destino para que no se vuelva a enviar el formulario
+        header("Location: $destino");
         exit;
+
     } else {
         // Si no es correcto, guardamos el error
         $errores["login"][] = "Usuario o contraseña incorrectos";
